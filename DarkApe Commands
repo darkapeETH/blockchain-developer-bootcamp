@@ -1,4 +1,10 @@
-Windows Console:
+
+Testing 
+
+	describe("Darktoken", ()=> {
+		//Tets go insisde here...
+	
+	})Windows Console:
 
 	Create new file in current folder: Touch Foldername/FileName
 
@@ -28,3 +34,11 @@ Hardhat Console commands
 	Define balance: const balance = await ethers.provider.getBalance(accounts[0].address)
 	Check balance: balance
 	See balance in ETH: ethers.utils.formatEther(balance.toString())
+
+Testing 
+
+	describe("Darktoken", ()=> {
+		//Tets go insisde here...
+	})
+
+	Begin Test: npx hardhat test

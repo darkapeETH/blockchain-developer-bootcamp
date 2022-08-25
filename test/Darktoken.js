@@ -7,9 +7,14 @@ const tokens = (n) => {
 
 describe('Darktoken', () => {
 	let darktoken
+	let accounts
+	let deployer
+
 	beforeEach( async () => {
 		const Darktoken = await ethers.getContractFactory('Darktoken')
 		darktoken = await Darktoken.deploy('Dark Token','DARK','1000000')		
+		accounts = await ethers.getSigners()
+		deployer = accounts[0]
 	})
 
 	describe('Deployment',() =>{
@@ -30,9 +35,9 @@ describe('Darktoken', () => {
 		it('has correct totalSupply', async () => {
 			expect(await darktoken.totalSupply()).to.equal(totalSupply)
 		})
-	
-
+		it('assigns totalSupply to deployer', async () => {
+			console.log(deployer.address)
+			expect(await darktoken.balanceOf(deployer.address)).to.equal(totalSupply)
+		})	
 	})
-
-
 })
