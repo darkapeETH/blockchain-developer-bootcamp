@@ -74,7 +74,7 @@ describe('Darktoken', () => {
 			})
 		})
 	})
-	describe('Approveing Tokens',  () => {
+	describe('Approving Tokens',  () => {
 
 		let amount, transaction, result
 
@@ -105,5 +105,42 @@ describe('Darktoken', () => {
  			})
 		})
 	})
+	describe('Delegated Token Transfers', () => {
+		let amount, transaction, result
+		beforeEach(async () => {
+			amount = tokens(100)
+			transaction = await darktoken.connect(deployer).approve(exchange.address, amount)
+			result = await transaction.wait()
+		})
 
+		describe('Success', () => {
+			beforeEach(async () => {
+				transaction = await darktoken.connect(exchange).transferFrom(deployer.address, receiver.address, amount)
+				result = await transaction.wait()
+			})
+			it('transfers token balances to receiver', async () => {
+				expect(await darktoken.balanceOf(deployer.address)).to.be.equal(ethers.utils.parseUnits('999900', 'ether'))
+				expect(await darktoken.balanceOf(receiver.address)).to.be.equal(amount)
+			})
+
+			it('resets the allowance', async () => {
+				expect(await darktoken.allowance(deployer.address, exchange.address)).to.be.equal(0)
+			})
+			it('emits a transfer event', async () => {
+				const event = result.events[0]
+				expect(event.event).to.equal('Transfer')
+
+				const args = event.args
+				expect(args.from).to.equal(deployer.address)
+				expect(args.to).to.equal(receiver.address)
+				expect(args.value).to.equal(amount)
+			})
+		})
+		describe('Failure', () => {
+			it('prevents an invalid transfer', async () => {
+				const invalidAmount = tokens(10000000)
+				await expect(darktoken.connect(exchange).transferFrom(deployer.address,receiver.address,invalidAmount)).to.be.reverted
+			})	
+		})		
+	})
 })
