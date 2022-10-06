@@ -12,10 +12,13 @@ contract Exchange {
 	mapping(address => mapping(address => uint256)) public tokens;
 	mapping(uint256 => _Order) public orders;
 	uint256 public orderCount;
+	mapping(uint256 => bool) public orderCancelled; // true or false (boolean / bool)
 
 	event Deposit(address token, address user, uint256 amount, uint256 balance);
 	event Withdraw(address token, address user, uint256 amount, uint256 balance);
 	event Order(uint256 id, address user, address tokenGet,	uint256 amountGet, address tokenGive, uint256 amountGive, uint256 timestamp);
+	event Cancel(uint256 id, address user, address tokenGet, uint256 amountGet, address tokenGive, uint256 amountGive, uint256 timestamp);
+
 
 	// Orders Mapping / Struct (a way to model the order)
 	struct _Order {
@@ -102,18 +105,37 @@ contract Exchange {
 			block.timestamp
 		);	
 	}
-}
-
-
-
-
-
-
-// Make Orders
 
 // Cancel Orders
+
+	function cancelOrder(uint256 _id) public {
+
+		// Fetching the order
+			// Read the order
+		_Order storage _order= orders[_id]; //We always have to declare a data type when we are declaring a variable in solidity
+											//but with solidity we have to tell it that we are pulling this order out of storage from the mapping. This is actually a Storage struct that is pulled out of the mapping that is writen to the blockchain.
+		// Ensure the caller of the function is the owner of the order
+		require(address(_order.user) == msg.sender); // one = assigns values, vs two == compares values.
+
+		// Order must exist
+		require(_order.id == _id);
+
+		// Cancel the order
+		orderCancelled[_id] = true;
+
+		// Emit event
+		emit Cancel(
+			_order.id,
+			msg.sender,
+			_order.tokenGet,
+			_order.amountGet,
+			_order.tokenGive,
+			_order.amountGive,
+			block.timestamp
+		);
+	}
+}
 
 // Fill Orders
 
 // Charge Fees
-
