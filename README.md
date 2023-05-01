@@ -7,8 +7,9 @@ Try running the following test:
 ```shell
 npx hardhat test
 ```
-
 You should be getting the following test results:
+```shell
+
  Darktoken
     Deployment
       ✔ has correct name
@@ -81,3 +82,5 @@ You should be getting the following test results:
 
 
   38 passing (4s)
+
+```
