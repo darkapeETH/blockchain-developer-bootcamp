@@ -1,13 +1,9 @@
-# Sample Hardhat Project
+# Desentralized Exchange Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+The project focused on building a Real-World DeFi project and featured a step-by-step coding of a decentralized cryptocurrency exchange. 
 
-Try running some of the following tasks:
+Try running the following test:
 
 ```shell
-npx hardhat help
 npx hardhat test
-GAS_REPORT=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
 ```
