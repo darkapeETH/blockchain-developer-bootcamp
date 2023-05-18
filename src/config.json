@@ -16,5 +16,11 @@
 	},
 	"11155111":{
 		"explorerURL": "https://sepolia.etherscan.io/"
+	},
+	"97":{
+		"wBNB":{
+			"address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+		},
+		"explorerURL": "https://testnet.bscscan.com/"	
 	}
 }
