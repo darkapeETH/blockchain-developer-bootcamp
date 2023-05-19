@@ -12,6 +12,7 @@ const Balance = () => {
   const tokenBalances = useSelector(state => state.tokens.balances)
   const exchangeBalances = useSelector(state => state.exchange.balances)
   const provider = useSelector(state => state.provider.connection)
+  const transferInProgress = useSelector(state => state.exchange.transferInProgress)
 
   const [token1TransferAmout, setToken1TransferAmout] = useState(0)
   const amountHandler = (e, token) => {
@@ -23,16 +24,25 @@ const Balance = () => {
 
   const depositHandler = (e, token) => {
     e.preventDefault()
-    if (token.address === tokens[0].address){
-      transferTokens(provider, exchange, "Deposit", tokens[0], token1TransferAmout, dispatch)
+    if (token.address === tokens[0].address){ 
+      transferTokens(provider, exchange, 'Deposit', token, token1TransferAmout, dispatch)
+      setToken1TransferAmout(0)
     }
   }
 
-    useEffect(() => {
-      if(exchange && tokens[0] && tokens[1] && account) {
-        loadBalances(exchange, tokens, account, dispatch)
-      }
-    }, [exchange, tokens, account])
+  //[x]step1 do transfer
+  //[x]step2 notify app that transfer is pending
+  //[x]step3 get confirmation from blockchain that transfer was successful
+  //[x]step4 notify app that transfer was successful
+  //[]step5 handle transfers fails and nofify app
+
+
+
+  useEffect(() => {
+    if(exchange && tokens[0] && tokens[1] && account) {
+      loadBalances(exchange, tokens, account, dispatch)
+    }
+  }, [exchange, tokens, account, transferInProgress])
 
   return (
     <div className='component exchange__transfers'>
@@ -55,9 +65,12 @@ const Balance = () => {
 
         <form onSubmit={(e) => depositHandler(e, tokens[0])}>
           <label htmlFor="token0">{symbols && symbols[0]} Amount</label>
-          <input type="text" id='token0' placeholder='0.0000' onChange={(e) => amountHandler(e, tokens[0])}/>
-
-
+          <input 
+            type="text" 
+            id='token0' 
+            placeholder='0.0000'
+            value={token1TransferAmout === 0 ? '' : token1TransferAmout}
+            onChange={(e) => amountHandler(e, tokens[0])}/>
           <button className='button' type='submit'>
             <span>Deposit {symbols && symbols[0]} </span>
           </button>
