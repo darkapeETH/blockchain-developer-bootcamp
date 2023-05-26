@@ -17,7 +17,7 @@ const Balance = () => {
 
   const [isDeposit, setIsDeposit] = useState(true)
   const [token1TransferAmout, setToken1TransferAmout] = useState(0)
-  const [token2TransferAmout, setToken2TransferAmout] = useState(1)  
+  const [token2TransferAmout, setToken2TransferAmout] = useState(0)  
 
   const depositRef = useRef(null)
   const withdrawRef = useRef(null)
@@ -37,7 +37,7 @@ const Balance = () => {
       setToken1TransferAmout(0)
     } else {
       transferTokens(provider, exchange, 'Deposit', token, token2TransferAmout, dispatch)
-      setToken2TransferAmout(0)   
+      setToken2TransferAmout(0)
     }
   }
 
@@ -49,7 +49,7 @@ const Balance = () => {
       setToken1TransferAmout(0)
     } else {
       transferTokens(provider, exchange, 'Withdraw', token, token2TransferAmout, dispatch)
-      setToken2TransferAmout(0)   
+      setToken2TransferAmout(0)
     }
   }
 

@@ -57,7 +57,19 @@ export const tokens = (state = {loaded: false, contracts: [], symbols: []}, acti
   }
 }
 
-export const exchange = (state = {loaded: false, contract: {}, transaction: {isSuccessful: false}, events: ['a','b'] }, action) => {
+const DEFAULT_EXCHANGE_STATE = {
+  loaded: false,
+  contract: {},
+  transaction: {isSuccessful: false},
+  events: [],
+  allOrders: {
+    loaded: false,
+    data: []}
+}
+
+export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
+  let index, data
+
   switch (action.type) {
     case 'EXCHANGE_LOADED':
       return {
@@ -112,7 +124,54 @@ export const exchange = (state = {loaded: false, contract: {}, transaction: {isS
         },
         transferInProgress: false,
       }
-      default:
-        return state
+
+    case 'NEW_ORDER_REQUEST':
+      return {
+        ...state,
+        transaction: {
+          transactionType: 'New Order',
+          isPending: true,
+          isSuccessful: false
+        }
+      }
+
+
+
+    case 'NEW_ORDER_SUCCESS':
+      //prevent duplicate orders
+      index = state.allOrders.data.findIndex(order => order.id === order.orderId)
+      if(index === -1) { // The findIndex method returns the index of the first element in the array that satisfies the provided condition. If no element satisfies the condition, the findIndex method returns -1 to indicate that the element was not found.
+          data = [...state.allOrders.data, action.order]
+        } else {
+          data = state.allOrders.data
+        }
+
+      return {
+        ...state,
+        allOrders:{
+          ...state.allOrders,
+          data
+        },
+        transaction: {
+          transactionType: 'New Order',
+          isPending: false,
+          isSuccessful: true,
+        },
+        events: [action.event, ...state.events]
+      }
+
+    case 'NEW_ORDER_FAIL':
+      return {
+        ...state,
+        transaction: {
+          transactionType: 'Failed Order',
+          isPending: false,
+          isSuccessful: false,
+          isError: true
+        }
+      }
+
+  default:
+    return state
   }
 }
