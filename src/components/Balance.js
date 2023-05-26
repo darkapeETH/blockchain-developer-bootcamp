@@ -41,6 +41,18 @@ const Balance = () => {
     }
   }
 
+
+  const withdrawHandler = (e, token) => {
+    e.preventDefault()
+    if (token.address === tokens[0].address){ 
+      transferTokens(provider, exchange, 'Withdraw', token, token1TransferAmout, dispatch)
+      setToken1TransferAmout(0)
+    } else {
+      transferTokens(provider, exchange, 'Withdraw', token, token2TransferAmout, dispatch)
+      setToken2TransferAmout(0)   
+    }
+  }
+
   const tabHandler = (e) => {
     if(e.target.className !== depositRef.current.className) {
       e.target.className = 'tab tab--active'
@@ -86,7 +98,11 @@ const Balance = () => {
           <p><small>Deposited on Exchange</small><br /> {exchangeBalances && exchangeBalances[0]}</p> 
         </div>
 
-        <form onSubmit={(e) => depositHandler(e, tokens[0])}>
+        <form onSubmit={ isDeposit ? (
+          (e) => depositHandler(e, tokens[0])
+          ) : (
+          (e) => withdrawHandler(e, tokens[0]))
+        }>
           <label htmlFor="token0">{symbols && symbols[0]} Amount</label>
           <input 
             type="text" 
@@ -116,7 +132,11 @@ const Balance = () => {
           <p><small>Deposited on Exchange</small><br /> {exchangeBalances && exchangeBalances[1]}</p> 
         </div>
 
-        <form onSubmit={(e) => depositHandler(e, tokens[1])}>
+        <form onSubmit={ isDeposit ? (
+          (e) => depositHandler(e, tokens[1])
+          ) : (
+          (e) => withdrawHandler(e, tokens[1]))
+        }>
           <label htmlFor="token1"></label>
           <input 
             type="text" 
